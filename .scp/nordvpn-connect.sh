@@ -47,6 +47,9 @@ for value in "${pays_disponibles[@]}";
 	do
 		[[ $value != *"-"* ]] && liste_filtree+=($value);
 done
+liste_triee=()
+IFS=$'\n' liste_triee=($(sort <<<"${liste_filtree[*]}"))
+unset IFS
 echo "Liste des pays chargée"
 
 # Vérification du statut actuel de la connexion
@@ -61,7 +64,7 @@ showConnectModal() {
 	title="Connexion à nordvpn"
 					prompt="Choisissez un pays"
 					opt=$(zenity --title="$title" --text="$prompt" --list --width=600 --height=400 \
-			        	            --column="Pays disponibles" "${liste_filtree[@]}")
+			        	            --column="Pays disponibles" "${liste_triee[@]}")
 					echo "Choix : $opt"
 					[ ! -z "$opt" ] && /usr/bin/nordvpn connect $opt
 }
